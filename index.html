@@ -8,6 +8,7 @@
   <script src="https://unpkg.com/aframe-event-set-component@4.2.1/dist/aframe-event-set-component.min.js"></script>
 
   <script src="js/Tour.js"></script>
+  <script src="js/CursorEvents.js"></script>
 </head>
 
 <body>
@@ -17,7 +18,7 @@
     <a-sky id="main-container" radius="5000" color="#98DAFC"></a-sky>
 
     <!-- Places Container -->
-    <a-entity id="places-container" tour></a-entity>
+    <a-entity id="places-container" cursor-listener tour></a-entity>
 
     <!-- CAMERA -->
     <a-camera id="camera" wasd-controls="enabled:false;">
@@ -28,8 +29,7 @@
           text="font: dejavu; align: center; width: 1; color: #0F184E; value: Travel Around The World"></a-entity>
       </a-entity>
 
-      <!--Background-->
-      <a-entity> </a-entity>
+      <a-entity id="camera-cursor" cursor position="0 0 -1" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03" material="color: #FFF; shader: flat"></a-entity>
     </a-camera>
   </a-scene>
 </body>

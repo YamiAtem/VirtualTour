@@ -16,7 +16,6 @@ AFRAME.registerComponent("tour", {
         title: "Budapest",
         url: "./assets/thumbnails/budapest.jpg",
       },
-
       {
         id: "eiffel-tower",
         title: "Eiffel Tower",
