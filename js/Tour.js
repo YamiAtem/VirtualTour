@@ -1,11 +1,40 @@
 AFRAME.registerComponent("tour", {
+  schema: {
+    state: { type: "string", default: "places-list" },
+    selectedCard: { type: "string", default: "#card1" },
+  },
   init: function () {
-    this.places_container = this.el;
-    this.create_cards();
+    this.placesContainer = this.el;
+    this.createCards();
   },
 
-  create_cards: function () {
-    const thumb_nails_ref = [
+  tick: function () {
+    const { state } = this.el.getAttribute("tour");
+
+    if (state === "view") {
+      this.hideEl([this.placesContainer]);
+      this.showView();
+    }
+  },
+  hideEl: function (elList) {
+    elList.map(el => {
+      el.setAttribute("visible", false);
+    });
+  },
+
+  showView: function () {
+    const { selectedCard } = this.data;
+
+    const skyEl = document.querySelector("#main-container");
+
+    skyEl.setAttribute("material", {
+      src: `./assets/360_images/${selectedCard}/place-1.jpg`,
+      color: "white"
+    });
+  },
+
+  createCards: function () {
+    const thumbNailsRef = [
       {
         id: "taj-mahal",
         title: "Taj Mahal",
@@ -16,6 +45,7 @@ AFRAME.registerComponent("tour", {
         title: "Budapest",
         url: "./assets/thumbnails/budapest.jpg",
       },
+
       {
         id: "eiffel-tower",
         title: "Eiffel Tower",
@@ -27,81 +57,70 @@ AFRAME.registerComponent("tour", {
         url: "./assets/thumbnails/new_york_city.png",
       },
     ];
+    let prevoiusXPosition = -60;
 
-    let prevoius_x_position = -60;
-
-    for (var item of thumb_nails_ref) {
-      const pos_x = prevoius_x_position + 25;
-      const pos_y = 10;
-      const pos_z = -40;
-      const position = { x: pos_x, y: pos_y, z: pos_z };
-      prevoius_x_position = pos_x;
+    for (var item of thumbNailsRef) {
+      const posX = prevoiusXPosition + 25;
+      const posY = 10;
+      const posZ = -40;
+      const position = { x: posX, y: posY, z: posZ };
+      prevoiusXPosition = posX;
 
       // Border Element
-      const border_el = this.create_border(position, item.id);
+      const borderEl = this.createBorder(position, item.id);
 
       // Thumbnail Element
-      const thumbnail_el = this.create_thumbnail(item);
-      border_el.appendChild(thumbnail_el);
+      const thumbNail = this.createThumbNail(item);
+      borderEl.appendChild(thumbNail);
 
       // Title Text Element
-      const text_el = this.create_text(position, item);
-      border_el.appendChild(text_el);
+      const titleEl = this.createTitleEl(position, item);
+      borderEl.appendChild(titleEl);
 
-      this.places_container.appendChild(border_el);
+      this.placesContainer.appendChild(borderEl);
     }
-
   },
-  create_border: function (position, id) {
-    const entity_el = document.createElement("a-entity")
-    entity_el.setAttribute("id", id)
-    entity_el.setAttribute("position", position)
-    entity_el.setAttribute("visible", true)
-
-    entity_el.setAttribute("geometry", {
+  createBorder: function (position, id) {
+    const entityEl = document.createElement("a-entity");
+    entityEl.setAttribute("id", id);
+    entityEl.setAttribute("visible", true);
+    entityEl.setAttribute("geometry", {
       primitive: "ring",
       radiusInner: 9,
-      radiusOuter: 10
+      radiusOuter: 10,
     });
-    entity_el.setAttribute("material", {
-      color: "#1181d1",
-      opacity: 1
+    entityEl.setAttribute("position", position);
+    entityEl.setAttribute("material", {
+      color: "#0077CC",
+      opacity: 1,
     });
 
-    return entity_el;
+    entityEl.setAttribute("cursor-listener", {});
+    return entityEl;
   },
-  create_thumbnail: function (item) {
-    const entity_el = document.createElement("a-entity")
-
-    entity_el.setAttribute("visible", true)
-
-    entity_el.setAttribute("geometry", {
+  createThumbNail: function (item) {
+    const entityEl = document.createElement("a-entity");
+    entityEl.setAttribute("visible", true);
+    entityEl.setAttribute("geometry", {
       primitive: "circle",
-      radius: 9
+      radius: 9,
     });
-    entity_el.setAttribute("material", {
-      src: item.url
-    });
-
-    return entity_el;
+    entityEl.setAttribute("material", { src: item.url });
+    return entityEl;
   },
-  create_text: function (position, item) {
-    const entity_el = document.createElement("a-entity")
-
-    entity_el.setAttribute("visible", true)
-
-    entity_el.setAttribute("text", {
+  createTitleEl: function (position, item) {
+    const entityEl = document.createElement("a-entity");
+    entityEl.setAttribute("text", {
       font: "exo2bold",
       align: "center",
-      color: "#d6550f",
+      width: 70,
+      color: "#e65100",
       value: item.title,
-      width: 70
     });
-
-    const el_position = position
-    el_position.y -= 30
-    entity_el.setAttribute("position", el_position)
-
-    return entity_el;
-  }
+    const elPosition = position;
+    elPosition.y = -20;
+    entityEl.setAttribute("position", elPosition);
+    entityEl.setAttribute("visible", true);
+    return entityEl;
+  },
 });

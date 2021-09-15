@@ -2,10 +2,40 @@ AFRAME.registerComponent("cursor-listener", {
     schema: {
         selectedItemId: { default: "", type: "string" },
     },
+
     init: function () {
+        this.handleClickEvents();
         this.handleMouseEnterEvents();
         this.handleMouseLeaveEvents();
     },
+
+    handleClickEvents: function () {
+        this.el.addEventListener("click", event => {
+            const places_container = document.querySelector("#places-container");
+            const { state } = places_container.getAttribute("tour")
+            console.log("Clicked")
+
+            if (state === "places-list") {
+                const id = this.el.getAttribute("id")
+                const places_id = [
+                    "taj-mahal",
+                    "budapest",
+                    "new-york-city",
+                    "eiffel-tower"
+                ];
+
+                if (places_id.includes(id)) {
+                    places_container.setAttribute("tour", {
+                        state: "view",
+                        selectedCard: id
+                    });
+                }
+            }
+        });
+
+        console.log("Done")
+    },
+
     handlePlacesListState: function () {
         const id = this.el.getAttribute("id");
         const placesId = ["taj-mahal", "budapest", "new-york-city", "eiffel-tower"];
