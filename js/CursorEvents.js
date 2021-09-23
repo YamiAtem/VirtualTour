@@ -31,9 +31,41 @@ AFRAME.registerComponent("cursor-listener", {
                     });
                 }
             }
-        });
 
+            if (state == "view") {
+                this.handleViewState()
+            }
+            if (state == "change-view") {
+                this.handleViewState()
+            }
+        });
         console.log("Done")
+    },
+
+    handleViewState: function () {
+        const el = this.el;
+        const id = el.getAttribute("id")
+        const places_container = document.querySelector("#places-container")
+        const { selectedItemId } = places_container.getAttribute("cursor-listener")
+
+        const side_view_places_id = [
+            "place-1",
+            "place-2",
+            "place-3",
+            "place-4"
+        ];
+
+        if (side_view_places_id.includes(id)) {
+            places_container.setAttribute("tour", {
+                state: "change-view"
+            });
+
+            const sky_el = document.querySelector("#main-container")
+            
+            sky_el.setAttribute("material", {
+                src: `./assets/360_images/${selectedItemId}/${id}.jpg`
+            })
+        }
     },
 
     handlePlacesListState: function () {
